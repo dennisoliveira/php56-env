@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: dennisoliveira/php56-env
+    container_name: zf2-basico-web
+    tty: true
+    volumes:
+      - ./www:/var/www/
+      - ./_docker/000-default.conf:/etc/apache2/sites-available/000-default.conf
+      - ./_docker/php.ini:/etc/php/5.6/apache2/php.ini
+    networks:
+      default:
+        ipv4_address: 172.30.0.2
+
+  db:
+    image: mysql:5.7
+    container_name: zf2-basico-db
+    volumes:
+      - ./db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123
+      - MYSQL_DATABASE=zend2
+    networks:
+      default:
+        ipv4_address: 172.30.0.3
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.30.0.0/24
